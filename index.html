@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ទាញយក YouTube - MP3/MP4</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== RESET ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #FF416C 0%, #FF4B2B 100%);
+            min-height: 100vh;
+            padding: 15px;
+            color: #333;
+        }
+        
+        /* ===== MAIN APP ===== */
+        .mobile-app {
+            max-width: 100%;
+            background: white;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+        }
+        
+        /* ===== HEADER ===== */
+        .app-header {
+            background: #FF0000;
+            padding: 25px 20px;
+            text-align: center;
+            color: white;
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .logo-icon {
+            font-size: 32px;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .app-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .app-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        /* ===== CONTENT ===== */
+        .app-content {
+            padding: 25px;
+        }
+        
+        /* ===== INPUT BOX ===== */
+        .input-box {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .input-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: #FF0000;
+            font-weight: 600;
+        }
+        
+        .url-input {
+            width: 100%;
+            padding: 18px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            font-size: 16px;
+            background: white;
+            transition: all 0.3s;
+        }
+        
+        .url-input:focus {
+            border-color: #FF0000;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1);
+        }
+        
+        /* ===== ACTION BUTTONS ===== */
+        .action-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .action-btn {
+            padding: 22px 15px;
+            border: none;
+            border-radius: 15px;
+            font-size: 17px;
+            font-weight: 600;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+        }
+        
+        .action-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .mp3-btn {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+        }
+        
+        .mp4-btn {
+            background: linear-gradient(135deg, #2196F3, #0D47A1);
+        }
+        
+        .btn-icon {
+            font-size: 28px;
+        }
+        
+        .btn-text {
+            font-size: 15px;
+        }
+        
+        /* ===== VIDEO INFO ===== */
+        .info-card {
+            background: #e3f2fd;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 5px solid #2196F3;
+            display: none;
+        }
+        
+        .info-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .info-details {
+            display: grid;
+            gap: 12px;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .info-label {
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .info-value {
+            font-weight: 600;
+            color: #1a1a1a;
+            text-align: right;
+            max-width: 60%;
+            word-break: break-all;
+        }
+        
+        /* ===== DOWNLOAD SECTION ===== */
+        .download-section {
+            display: none;
+            animation: slideUp 0.5s;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .download-cards {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .download-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        .download-card:hover {
+            border-color: #FF0000;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: white;
+        }
+        
+        .mp3-icon {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+        }
+        
+        .mp4-icon {
+            background: linear-gradient(135deg, #2196F3, #0D47A1);
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .card-desc {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .iframe-wrapper {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .download-iframe {
+            width: 100%;
+            max-width: 350px;
+            height: 60px;
+            border: none;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .quality-info {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+        }
+        
+        /* ===== LOADING ===== */
+        .loading-container {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #FF0000;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* ===== HISTORY ===== */
+        .history-section {
+            margin-top: 30px;
+            display: none;
+        }
+        
+        .history-list {
+            display: grid;
+            gap: 12px;
+        }
+        
+        .history-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .history-content {
+            flex: 1;
+        }
+        
+        .history-id {
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 5px;
+        }
+        
+        .history-time {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .history-action {
+            background: none;
+            border: none;
+            color: #2196F3;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 8px;
+        }
+        
+        /* ===== FOOTER ===== */
+        .app-footer {
+            background: #f8f9fa;
+            padding: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border-radius: 12px;
+            padding: 18px;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .warning-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            color: #856404;
+        }
+        
+        .warning-text {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .app-content {
+                padding: 20px;
+            }
+            
+            .action-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-btn {
+                padding: 25px 15px;
+            }
+            
+            .download-card {
+                padding: 15px;
+            }
+            
+            .card-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+            
+            .card-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 26px;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .app-title {
+                font-size: 20px;
+            }
+            
+            .url-input {
+                padding: 15px;
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-app">
+        <!-- HEADER -->
+        <div class="app-header">
+            <div class="header-content">
+                <i class="fas fa-play-circle logo-icon"></i>
+                <div>
+                    <div class="app-title">YouTube Downloader</div>
+                    <div class="app-subtitle">MP3 • MP4 • ឥតគិតថ្លៃ</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- MAIN CONTENT -->
+        <div class="app-content">
+            <!-- URL INPUT -->
+            <div class="input-box">
+                <div class="input-title">
+                    <i class="fas fa-link"></i>
+                    <span>តំណ YouTube</span>
+                </div>
+                <input type="text" 
+                       id="youtubeUrl" 
+                       class="url-input" 
+                       placeholder="https://youtu.be/bcmLjb1-qpQ"
+                       value="https://youtu.be/bcmLjb1-qpQ">
+            </div>
+            
+            <!-- ACTION BUTTONS -->
+            <div class="action-grid">
+                <button class="action-btn mp3-btn" onclick="downloadVideo('mp3')">
+                    <i class="fas fa-music btn-icon"></i>
+                    <span class="btn-text">ទាញយក MP3</span>
+                </button>
+                <button class="action-btn mp4-btn" onclick="downloadVideo('mp4')">
+                    <i class="fas fa-film btn-icon"></i>
+                    <span class="btn-text">ទាញយក MP4</span>
+                </button>
+            </div>
+            
+            <!-- VIDEO INFO -->
+            <div class="info-card" id="videoInfo">
+                <div class="info-header">
+                    <i class="fas fa-info-circle" style="color: #2196F3; font-size: 20px;"></i>
+                    <h3>ព័ត៌មានវីដេអូ</h3>
+                </div>
+                <div class="info-details">
+                    <div class="info-row">
+                        <span class="info-label">Video ID</span>
+                        <span class="info-value" id="videoIdDisplay">bcmLjb1-qpQ</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">ប្រភេទ</span>
+                        <span class="info-value" id="videoType">វីដេអូធម្មតា</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- LOADING -->
+            <div class="loading-container" id="loading">
+                <div class="loading-spinner"></div>
+                <p style="color: #666; margin-top: 15px; font-weight: 500;">កំពុងដំណើរការ...</p>
+            </div>
+            
+            <!-- DOWNLOAD SECTION -->
+            <div class="download-section" id="downloadSection">
+                <div class="section-title">
+                    <h3><i class="fas fa-download"></i> ជម្រើសទាញយក</h3>
+                    <span style="background: #FF0000; color: white; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">720p</span>
+                </div>
+                
+                <div class="download-cards">
+                    <!-- MP3 CARD -->
+                    <div class="download-card">
+                        <div class="card-header">
+                            <div class="card-icon mp3-icon">
+                                <i class="fas fa-music"></i>
+                            </div>
+                            <div>
+                                <div class="card-title">MP3 សម្លេង</div>
+                                <div class="card-desc">គុណភាពសម្លេងល្អ</div>
+                            </div>
+                        </div>
+                        
+                        <div class="iframe-wrapper">
+                            <iframe class="download-iframe" 
+                                    id="mp3Frame"
+                                    scrolling="no">
+                            </iframe>
+                        </div>
+                        
+                        <div class="quality-info">
+                            <i class="fas fa-volume-up"></i> 192kbps • ~3-5MB
+                        </div>
+                    </div>
+                    
+                    <!-- MP4 CARD -->
+                    <div class="download-card">
+                        <div class="card-header">
+                            <div class="card-icon mp4-icon">
+                                <i class="fas fa-film"></i>
+                            </div>
+                            <div>
+                                <div class="card-title">MP4 វីដេអូ</div>
+                                <div class="card-desc">គុណភាពវីដេអូច្បាស់</div>
+                            </div>
+                        </div>
+                        
+                        <div class="iframe-wrapper">
+                            <iframe class="download-iframe" 
+                                    id="mp4Frame"
+                                    scrolling="no">
+                            </iframe>
+                        </div>
+                        
+                        <div class="quality-info">
+                            <i class="fas fa-video"></i> 720p • ~10-50MB
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- HISTORY -->
+            <div class="history-section" id="historySection">
+                <div class="section-title">
+                    <h3><i class="fas fa-history"></i> ប្រវត្តិថ្មីៗ</h3>
+                    <button onclick="clearHistory()" style="background: none; border: none; color: #666; font-size: 18px; cursor: pointer;">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+                
+                <div class="history-list" id="historyList">
+                    <!-- History items will appear here -->
+                </div>
+            </div>
+            
+            <!-- WARNING -->
+            <div class="app-footer">
+                <div class="warning-box">
+                    <div class="warning-title">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>ការព្រមាន</span>
+                    </div>
+                    <div class="warning-text">
+                        <p>• សូមគោរពរក្សាសិទ្ធិអ្នកនិពន្ធ</p>
+                        <p>• កុំទាញយកវីដេអូឯកជនដោយគ្មានការអនុញ្ញាត</p>
+                        <p>• ប្រើសម្រាប់ការសិក្សា និងការកម្សាន្តតែប៉ុណ្ណោះ</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ទាញយក Video ID
+        function extractVideoId(url) {
+            if (!url) return null;
+            
+            const patterns = [
+                { regex: /youtu\.be\/([a-zA-Z0-9_-]+)/, index: 1 },
+                { regex: /v=([a-zA-Z0-9_-]+)/, index: 1 },
+                { regex: /shorts\/([a-zA-Z0-9_-]+)/, index: 1 },
+                { regex: /embed\/([a-zA-Z0-9_-]+)/, index: 1 },
+                { regex: /live\/([a-zA-Z0-9_-]+)/, index: 1 },
+                { regex: /^([a-zA-Z0-9_-]{11})$/, index: 1 }
+            ];
+            
+            for (const pattern of patterns) {
+                const match = url.match(pattern.regex);
+                if (match) {
+                    return match[pattern.index];
+                }
+            }
+            
+            return null;
+        }
+        
+        // កំណត់ប្រភេទវីដេអូ
+        function getVideoType(url) {
+            if (url.includes('shorts/')) return 'Shorts';
+            if (url.includes('live/')) return 'Live';
+            if (url.includes('embed/')) return 'Embedded';
+            return 'វីដេអូធម្មតា';
+        }
+        
+        // ទាញយកវីដេអូ
+        async function downloadVideo(format) {
+            const urlInput = document.getElementById('youtubeUrl').value.trim();
+            
+            if (!urlInput) {
+                alert('សូមបញ្ចូលតំណ YouTube!');
+                return;
+            }
+            
+            const videoId = extractVideoId(urlInput);
+            
+            if (!videoId) {
+                alert('មិនអាចទាញយក Video ID ពីតំណនេះបានទេ។\n\nឧទាហរណ៍ត្រឹមត្រូវ៖\n• https://youtu.be/bcmLjb1-qpQ\n• https://youtube.com/watch?v=VIDEO_ID');
+                return;
+            }
+            
+            // បង្ហាញ loading
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('downloadSection').style.display = 'none';
+            
+            // រក្សាទុកក្នុងប្រវត្តិ
+            saveToHistory(videoId, urlInput);
+            
+            // បង្ហាញព័ត៌មានវីដេអូ
+            document.getElementById('videoInfo').style.display = 'block';
+            document.getElementById('videoIdDisplay').textContent = videoId;
+            document.getElementById('videoType').textContent = getVideoType(urlInput);
+            
+            // បង្កើត iframe URLs
+            const mp3Url = `https://yt-api.org/button/mp3/${videoId}`;
+            const mp4Url = `https://yt-api.org/button/mp4/${videoId}`;
+            
+            // កំណត់ iframe src
+            document.getElementById('mp3Frame').src = mp3Url;
+            document.getElementById('mp4Frame').src = mp4Url;
+            
+            // ពន្យារពេលសម្រាប់ animation
+            await new Promise(resolve => setTimeout(resolve, 800));
+            
+            // លាក់ loading បង្ហាញលទ្ធផល
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('downloadSection').style.display = 'block';
+            
+            // បង្ហាញប្រវត្តិ
+            showHistory();
+            
+            // ស្ក្រូលទៅលទ្ធផល
+            document.getElementById('downloadSection').scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+        
+        // រក្សាទុកប្រវត្តិ
+        function saveToHistory(videoId, url) {
+            const history = JSON.parse(localStorage.getItem('ytMobileHistory') || '[]');
+            
+            // ពិនិត្យមើលថាមានរួចឬនៅ
+            const exists = history.some(item => item.id === videoId);
+            if (exists) return;
+            
+            const historyItem = {
+                id: videoId,
+                url: url,
+                date: new Date().toLocaleTimeString('km-KH', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                }),
+                timestamp: Date.now()
+            };
+            
+            // បន្ថែមដើម ហើយរក្សាត្រឹម 4 ធាតុ
+            history.unshift(historyItem);
+            if (history.length > 4) history.pop();
+            
+            localStorage.setItem('ytMobileHistory', JSON.stringify(history));
+        }
+        
+        // បង្ហាញប្រវត្តិ
+        function showHistory() {
+            const history = JSON.parse(localStorage.getItem('ytMobileHistory') || '[]');
+            const historyList = document.getElementById('historyList');
+            
+            if (history.length === 0) {
+                document.getElementById('historySection').style.display = 'none';
+                return;
+            }
+            
+            document.getElementById('historySection').style.display = 'block';
+            
+            historyList.innerHTML = '';
+            history.forEach(item => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                historyItem.innerHTML = `
+                    <div class="history-content">
+                        <div class="history-id">${item.id}</div>
+                        <div class="history-time">${item.date}</div>
+                    </div>
+                    <button class="history-action" onclick="useHistoryItem('${item.url}')">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                `;
+                historyList.appendChild(historyItem);
+            });
+        }
+        
+        // ប្រើធាតុប្រវត្តិ
+        function useHistoryItem(url) {
+            document.getElementById('youtubeUrl').value = url;
+            
+            // ធ្វើឲ្យ input បញ្ចេញពណ៌
+            const input = document.getElementById('youtubeUrl');
+            input.style.borderColor = '#4CAF50';
+            input.style.boxShadow = '0 0 0 3px rgba(76, 175, 80, 0.2)';
+            
+            setTimeout(() => {
+                input.style.borderColor = '';
+                input.style.boxShadow = '';
+            }, 1000);
+            
+            // បង្ហាញព័ត៌មានវីដេអូ
+            const videoId = extractVideoId(url);
+            if (videoId) {
+                document.getElementById('videoInfo').style.display = 'block';
+                document.getElementById('videoIdDisplay').textContent = videoId;
+                document.getElementById('videoType').textContent = getVideoType(url);
+            }
+        }
+        
+        // លុបប្រវត្តិ
+        function clearHistory() {
+            if (confirm('លុបប្រវត្តិទាញយកទាំងអស់?')) {
+                localStorage.removeItem('ytMobileHistory');
+                document.getElementById('historySection').style.display = 'none';
+            }
+        }
+        
+        // ផ្ទុកប្រវត្តិនៅពេលចាប់ផ្តើម
+        window.onload = function() {
+            showHistory();
+            
+            // ដំណើរការឧទាហរណ៍ដំបូង
+            const exampleUrl = 'https://youtu.be/bcmLjb1-qpQ';
+            const videoId = extractVideoId(exampleUrl);
+            if (videoId) {
+                document.getElementById('videoInfo').style.display = 'block';
+                document.getElementById('videoIdDisplay').textContent = videoId;
+                document.getElementById('videoType').textContent = getVideoType(exampleUrl);
+            }
+        };
+    </script>
+</body>
+</html>
